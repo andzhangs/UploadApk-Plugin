@@ -1,0 +1,104 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "cn.andzhang.groovy",
+    "module": "groovy-plugin",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "groovy-plugin-1.0.0.jar",
+          "url": "groovy-plugin-1.0.0.jar",
+          "size": 91434,
+          "sha512": "16d42777d24aff39351e2206780f49594682b41af2cade2b44e5fdd6daabc6569ea357845d954c9c963d3cbb4a1452ab6352d484e70f61e9696e029fc9adb379",
+          "sha256": "61b678b3a78600d153571673cfdb608cbc69ed4b1767101e8cf6379407e0111e",
+          "sha1": "e377026a87a4ac5f12d2e07f046279c79cd44d90",
+          "md5": "22e9106601a3f4bbb934d12f7d957e14"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.6"
+          }
+        },
+        {
+          "group": "commons-codec",
+          "module": "commons-codec",
+          "version": {
+            "requires": "1.11"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.10.0"
+          }
+        },
+        {
+          "group": "com.squareup.retrofit2",
+          "module": "retrofit",
+          "version": {
+            "requires": "2.9.0"
+          }
+        },
+        {
+          "group": "com.squareup.retrofit2",
+          "module": "converter-gson",
+          "version": {
+            "requires": "2.9.0"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "logging-interceptor",
+          "version": {
+            "requires": "4.9.3"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "groovy-plugin-1.0.0.jar",
+          "url": "groovy-plugin-1.0.0.jar",
+          "size": 91434,
+          "sha512": "16d42777d24aff39351e2206780f49594682b41af2cade2b44e5fdd6daabc6569ea357845d954c9c963d3cbb4a1452ab6352d484e70f61e9696e029fc9adb379",
+          "sha256": "61b678b3a78600d153571673cfdb608cbc69ed4b1767101e8cf6379407e0111e",
+          "sha1": "e377026a87a4ac5f12d2e07f046279c79cd44d90",
+          "md5": "22e9106601a3f4bbb934d12f7d957e14"
+        }
+      ]
+    }
+  ]
+}

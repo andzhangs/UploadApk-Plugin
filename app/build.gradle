@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     //自定义三
-    id 'android-plugin'
+    id 'upload-apk-plugin'
 //    id 'groovy-plugin'
 }
 
