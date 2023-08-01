@@ -71,7 +71,7 @@ publishing {
             pom {
                 name = "ZsPlugin"
                 description = "A demonstration of Maven POM customization"
-                url = "https://github.com/TooCareAboutYOU/UplaodApk-pgy-fir-Gradle"
+                url = "https://github.com/TooCareAboutYOU/UploadApk-Plugin"
                 inceptionYear='2022/11/25'
                 licenses {
                     license {
@@ -99,7 +99,7 @@ publishing {
             pom {
                 name = "ZsPlugin"
                 description = "A demonstration of Maven POM customization"
-                url = "https://github.com/TooCareAboutYOU/UplaodApk-pgy-fir-Gradle"
+                url = "https://github.com/TooCareAboutYOU/UploadApk-Plugin"
                 inceptionYear='2022/11/25'
                 licenses {
                     license {
