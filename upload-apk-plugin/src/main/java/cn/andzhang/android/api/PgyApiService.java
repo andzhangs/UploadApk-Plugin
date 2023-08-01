@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import cn.andzhang.android.model.response.BaseResponseBean;
 import cn.andzhang.android.model.response.pgy.PgyAppDetailInfoBean;
+import cn.andzhang.android.model.response.pgy.PgyCurrentAppDetailInfoBean;
 import cn.andzhang.android.model.response.pgy.PgyTokenBean;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -38,6 +39,14 @@ public interface PgyApiService {
     @POST
     Call<BaseResponseBean<Object>> uploadApkToPgy(@Url String url,
                                                   @Part List<MultipartBody.Part> parts);
+
+
+    /**
+     * 检测应用是否发布完成，并获取发布应用的信息
+     */
+    @FormUrlEncoded
+    @POST("buildInfo")
+    Call<BaseResponseBean<PgyCurrentAppDetailInfoBean>> getCurrentDetailInfo(@FieldMap Map<String, Object> map);
 
     /**
      * 获取应用信息

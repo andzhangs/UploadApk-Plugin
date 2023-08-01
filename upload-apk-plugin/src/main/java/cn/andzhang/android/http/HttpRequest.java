@@ -20,6 +20,7 @@ import cn.andzhang.android.api.FirApiService;
 import cn.andzhang.android.api.PgyApiService;
 import cn.andzhang.android.manager.DingDingManager;
 import cn.andzhang.android.manager.FirImManager;
+import cn.andzhang.android.manager.PgyManager;
 import cn.andzhang.android.util.Logger;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,44 +36,37 @@ import cn.andzhang.android.model.config.PluginConfigBean;
  */
 public class HttpRequest {
 
-    private static Gson mGson;
-    public static PluginConfigBean mData;
-    private static Long mTimestamp;
-
-    private HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor(s -> {
-        Logger.print("输出日志：" + s);
-        if (s.contains("<-- 201")) {
-            Logger.print("Fir.im请求成功！！");
-        }
-
-        if (s.contains("<-- 204")) {
-            Logger.print("蒲公英上传成功！！");
-        }
-    });
-    private OkHttpClient mOkhttpClient;
-    private Retrofit mRetrofit;
-    private PgyApiService pgyApiService;
-    private FirApiService firApiService;
-    private DingDingApiService dingDingApiService;
+    public static PluginConfigBean mConfigBean;
 
     private HttpRequest() {
+        HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor(s -> {
+            Logger.print("输出日志：" + s);
+            if (s.contains("<-- 201")) {
+                Logger.print("Fir.im请求成功！！");
+            }
+
+            if (s.contains("<-- 204")) {
+                Logger.print("蒲公英上传成功！！");
+            }
+        });
         mInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        mOkhttpClient = new OkHttpClient.Builder().addInterceptor(mInterceptor).build();
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(mData.isPgy ? mData.pgyConfig.pgyApiUrl : mData.firImConfig.firApiUrl)
+        OkHttpClient mOkhttpClient = new OkHttpClient.Builder().addInterceptor(mInterceptor).build();
+        Retrofit mRetrofit = new Retrofit.Builder()
+                .baseUrl(mConfigBean.isPgy ? mConfigBean.pgyConfig.pgyApiUrl : mConfigBean.firImConfig.firApiUrl)
                 .client(mOkhttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        dingDingApiService = mRetrofit.create(DingDingApiService.class);
-        DingDingManager.init(dingDingApiService, mData.ddConfig.ddWebHookUrl);
+        DingDingApiService dingDingApiService = mRetrofit.create(DingDingApiService.class);
+        DingDingManager.init(dingDingApiService, mConfigBean.ddConfig.ddWebHookUrl);
 
-        if (mData.isPgy) {
-            pgyApiService = mRetrofit.create(PgyApiService.class);
+        if (mConfigBean.isPgy) {
+            PgyApiService pgyApiService = mRetrofit.create(PgyApiService.class);
+            PgyManager.init(pgyApiService,mConfigBean);
         } else {
             //初始化FirIm
-            firApiService = mRetrofit.create(FirApiService.class);
-            FirImManager.init(mData, firApiService);
+            FirApiService firApiService = mRetrofit.create(FirApiService.class);
+            FirImManager.init(mConfigBean, firApiService);
         }
     }
 
@@ -85,7 +79,7 @@ public class HttpRequest {
     }
 
     public static void init(Project project) {
-        mGson = new Gson();
+        Gson mGson = new Gson();
         File file = new File(project.getRootDir().getAbsolutePath() + "/upload-apk.json");
         try {
             JsonReader jsonReader = new JsonReader(new FileReader(file));
@@ -106,14 +100,14 @@ public class HttpRequest {
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(new SecretKeySpec(data.ddConfig.ddWebSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
             byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
-            String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), "UTF-8");
+            String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), StandardCharsets.UTF_8);
             data.ddConfig.ddWebHookUrl += "&timestamp=" + mTimestamp + "&sign=" + sign;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mData = data;
+        mConfigBean = data;
 
-        Logger.print("输出配置参数：" + mData);
+        Logger.print("输出配置参数：" + mConfigBean);
     }
 
 
@@ -121,14 +115,15 @@ public class HttpRequest {
      * 获取token
      */
     public void getToken() {
-        if (mData.isPgy) {
-            if (mData.pgyConfig != null) {
-//                getPgyToken();
+        if (mConfigBean.isPgy) {
+            if (mConfigBean.pgyConfig != null) {
+                PgyManager.getInstance().getPgyToken();
+
             } else {
                 System.out.println("请配置蒲公英相关数据");
             }
         } else {
-            if (mData.firImConfig != null) {
+            if (mConfigBean.firImConfig != null) {
                 FirImManager.getInstance().getFirImToken();
             } else {
                 System.out.println("请配置Fir.im相关数据");
@@ -140,14 +135,14 @@ public class HttpRequest {
      * 上传apk文件
      */
     public void uploadApk() {
-        if (mData.isPgy) {
-            if (mData.pgyConfig != null) {
-//                uploadApkToPgy();
+        if (mConfigBean.isPgy) {
+            if (mConfigBean.pgyConfig != null) {
+                PgyManager.getInstance().uploadApkToPgy();
             } else {
                 System.out.println("请配置蒲公英相关数据");
             }
         } else {
-            if (mData.firImConfig != null) {
+            if (mConfigBean.firImConfig != null) {
                 FirImManager.getInstance().uploadApkToFirIm();
             } else {
                 System.out.println("请配置Fir.im相关数据");

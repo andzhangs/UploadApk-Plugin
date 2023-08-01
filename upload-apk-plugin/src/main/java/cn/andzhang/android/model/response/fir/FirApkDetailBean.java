@@ -1,5 +1,6 @@
 package cn.andzhang.android.model.response.fir;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
@@ -201,24 +202,6 @@ public class FirApkDetailBean implements Serializable {
 
     @Override
     public String toString() {
-        return "{" +
-                "id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", desc='" + desc + '\'' +
-                ", shortX='" + shortX + '\'' +
-                ", is_opened=" + is_opened +
-                ", bundle_id='" + bundle_id + '\'' +
-                ", is_show_plaza=" + is_show_plaza +
-                ", passwd=" + passwd +
-                ", max_release_count=" + max_release_count +
-                ", is_store_auto_sync=" + is_store_auto_sync +
-                ", store_link_visible=" + store_link_visible +
-                ", genre_id=" + genre_id +
-                ", created_at=" + created_at +
-                ", has_combo=" + has_combo +
-                ", icon_url=" + icon_url +
-                ", is_owner=" + is_owner +
-                '}';
+        return new Gson().toJson(this);
     }
 }

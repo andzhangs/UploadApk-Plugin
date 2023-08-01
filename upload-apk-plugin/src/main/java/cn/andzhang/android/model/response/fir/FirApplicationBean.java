@@ -1,5 +1,6 @@
 package cn.andzhang.android.model.response.fir;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -368,14 +369,7 @@ public class FirApplicationBean implements Serializable {
 
             @Override
             public String toString() {
-                return "{" +
-                        "version='" + version + '\'' +
-                        ", build='" + build + '\'' +
-                        ", release_type='" + release_type + '\'' +
-                        ", distribution_name='" + distribution_name + '\'' +
-                        ", supported_platform=" + supported_platform +
-                        ", created_at=" + created_at +
-                        '}';
+                return new Gson().toJson(this);
             }
         }
 
@@ -413,10 +407,6 @@ public class FirApplicationBean implements Serializable {
 
     @Override
     public String toString() {
-        return "{" +
-                "apps_count=" + apps_count +
-                ", page_size=" + page_size +
-                ", items=" + items +
-                '}';
+        return new Gson().toJson(this);
     }
 }

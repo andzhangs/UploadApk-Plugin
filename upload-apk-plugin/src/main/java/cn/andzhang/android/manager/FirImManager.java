@@ -27,8 +27,8 @@ import retrofit2.Response;
  */
 public class FirImManager {
 
-    private PluginConfigBean mData;
-    private FirApiService firApiService;
+    private final PluginConfigBean mData;
+    private final FirApiService firApiService;
     private FirImTokenBean mFirImTokenBean;
 
     private static volatile FirImManager sInstance = null;

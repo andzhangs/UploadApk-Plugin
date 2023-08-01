@@ -1,5 +1,7 @@
 package cn.andzhang.android.model.response;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 
 /**
@@ -14,14 +16,6 @@ public class BaseResponseBean<T> implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"code\":")
-                .append(code);
-        sb.append(",\"message\":\"")
-                .append(message).append('\"');
-        sb.append(",\"data\":")
-                .append(data);
-        sb.append('}');
-        return sb.toString();
+        return new Gson().toJson(this);
     }
 }
