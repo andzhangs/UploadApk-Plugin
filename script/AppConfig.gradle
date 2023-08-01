@@ -1,0 +1,45 @@
+android {
+    signingConfigs {
+        release {
+            storeFile file("${rootDir}/upload-apk.jks")
+            storePassword 'zxcvbnm'
+            keyAlias 'zxcvbnm'
+            keyPassword 'zxcvbnm'
+        }
+    }
+
+    buildTypes {
+//        def RELEASE_API_HOST = "\"https://api.github.com/user\""
+//        def DEBUG_API_HOST = "\"https://api.github.com/authorizations\""
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            buildConfigField("String", "API_HOST", "${RELEASE_API_HOST}")
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            buildConfigField("String", "API_HOST", "${DEBUG_API_HOST}")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+}

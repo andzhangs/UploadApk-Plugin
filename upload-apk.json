@@ -1,0 +1,35 @@
+{
+  "apkOutputPath": "/Users/zhangshuai/Project____/Android/UploadApk-Plugin/app/build/outputs/apk/release/app-release.apk",
+  "firImConfig": {
+    "type": "android",
+    "xName": "UploadApk-Plugin",
+    "packageName": "com.upload.apk.plugin",
+    "bindingHost": "http://fir.andzhang.cn/",
+    "apiToken": "62fa6ffe5a53ec00a5e6265a0e00c372",
+    "icon": "/Users/zhangshuai/Project____/Android/UploadApk-Plugin/app/release/icon_style_1.png",
+    "xVersion": "1.0.0",
+    "xBuild": "100",
+    "xChangeLog": "Fir.im版本更新"
+  },
+  "ddConfig": {
+    "ddWebSecret": "SECdb8dbb10dddd791b1d5a45c02e6bc8ddcb57a6aca5dc4ca37a7aca6b629ee515",
+    "ddWebHookUrl": "https://oapi.dingtalk.com/robot/send?access_token=d4d6efbf4a175d912fe5a205ff939c66727b8761dc9c70bf3c90066a073c8138"
+  },
+  "ddContent": {
+    "at": {
+      "atMobiles": [
+        "18874703156"
+      ],
+      "atUserIds": [
+        "zs18874703156"
+      ],
+      "isAtAll": false
+    },
+    "msgtype": "link",
+    "link": {
+      "text": "我是来自FirIm的Apk动态发布的消息测试用例",
+      "title": "发布新版App啦！v1.0.0",
+      "picUrl": "https://pro-icon-qn.bv40.com/19f628d4b5a4327808102bce9c778a0a5c782bdb?attname=icon_app.png&tmp=1670322537.9097416"
+    }
+  }
+}
