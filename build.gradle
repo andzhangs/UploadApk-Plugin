@@ -1,10 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        //maven本地仓库路径
-//        mavenLocal()
+        //maven本地仓库路径  运行命令：publishToMavenLocal 或者 publishReleasePublicationToMavenLocal
+        // /Users/zhangshuai/.m2/repository
+        mavenLocal()
         //自定义仓库路径
-        maven { url = 'upload-apk-plugin/repo' }
+//        maven { url = 'upload-apk-plugin/repo' }
     }
 
     dependencies {
