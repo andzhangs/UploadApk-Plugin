@@ -30,8 +30,8 @@ sourceSets {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 //  发布区域
 
@@ -63,10 +63,10 @@ gradlePlugin {
 publishing {
     publications {
         groovy(MavenPublication) {
-            from components.java
             groupId = MAVEN_GROOVY_GROUP_ID
             artifactId = MAVEN_GROOVY_ARTIFACT_ID
             version = MAVEN_GROOVY_VERSION
+            from components.java
 
             pom {
                 name = "ZsPlugin"
@@ -91,10 +91,10 @@ publishing {
         }
 
         android(MavenPublication) {
-            from components.java
             groupId = MAVEN_ANDROID_GROUP_ID
             artifactId = MAVEN_ANDROID_ARTIFACT_ID
             version = MAVEN_ANDROID_VERSION
+            from components.java
 
             pom {
                 name = "ZsPlugin"

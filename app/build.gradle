@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-
     //自定义三
 //    id 'upload-apk-plugin'
 //    id 'groovy-plugin'
