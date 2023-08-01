@@ -72,7 +72,7 @@ publishing {
                 name = "ZsPlugin"
                 description = "A demonstration of Maven POM customization"
                 url = "https://github.com/TooCareAboutYOU/UplaodApk-Plugin"
-                inceptionYear='2022/11/25'
+                inceptionYear = '2022/11/25'
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
@@ -84,7 +84,7 @@ publishing {
                         id = "zs"
                         name = "zhagnshuai"
                         email = "1175133706@qq.com"
-                        organization='上海双深技术有限公司'
+                        organization = '上海双深技术有限公司'
                     }
                 }
             }
@@ -100,7 +100,7 @@ publishing {
                 name = "ZsPlugin"
                 description = "AndroidStudio打包APK后自动化上传到FirIm或蒲公英发布平台，并发送消息到钉钉群或飞书群"
                 url = "https://github.com/TooCareAboutYOU/UplaodApk-Plugin"
-                inceptionYear='2022/11/25'
+                inceptionYear = '2022/11/25'
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
@@ -112,7 +112,7 @@ publishing {
                         id = "zs"
                         name = "zhagnshuai"
                         email = "1175133706@qq.com"
-                        organization='上海双深技术有限公司'
+                        organization = '上海双深技术有限公司'
                     }
                 }
             }
@@ -130,8 +130,8 @@ publishing {
 //                password = MAVEN_PASSWORD
 //            }
             //自定义路径：CustomProjectPlugin/build/repo
-            url = layout.projectDirectory.dir('repo')
-//            url =uri('../repo')
+//            url = layout.projectDirectory.dir('repo')
+            url = uri('../repo')
         }
     }
 }
