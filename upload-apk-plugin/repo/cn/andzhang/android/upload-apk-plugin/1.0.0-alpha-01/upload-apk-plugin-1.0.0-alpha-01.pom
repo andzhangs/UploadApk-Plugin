@@ -7,11 +7,11 @@
   <!-- that they should prefer consuming it instead. -->
   <!-- do_not_remove: published-with-gradle-metadata -->
   <modelVersion>4.0.0</modelVersion>
-  <groupId>cn.andzhang.groovy</groupId>
-  <artifactId>groovy-plugin</artifactId>
-  <version>1.0.0</version>
+  <groupId>cn.andzhang.android</groupId>
+  <artifactId>upload-apk-plugin</artifactId>
+  <version>1.0.0-alpha-01</version>
   <name>ZsPlugin</name>
-  <description>A demonstration of Maven POM customization</description>
+  <description>AndroidStudio打包APK后自动化上传到FirIm或蒲公英发布平台，并发送消息到钉钉群或飞书群</description>
   <url>https://github.com/TooCareAboutYOU/UplaodApk-Plugin</url>
   <inceptionYear>2022/11/25</inceptionYear>
   <licenses>
