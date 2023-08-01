@@ -130,8 +130,8 @@ publishing {
 //                password = MAVEN_PASSWORD
 //            }
             //自定义路径：CustomProjectPlugin/build/repo
-//            url = layout.projectDirectory.dir('repo')
-            url = uri('../repo')
+            url = layout.projectDirectory.dir('repo')
+//            url = uri('../repo')
         }
     }
 }
