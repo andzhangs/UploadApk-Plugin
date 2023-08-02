@@ -1,5 +1,5 @@
 ## 前言：
-#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;使用此插件在运行打包命令时，自动上传到蒲公英或者FirIm发布平台，并通知到钉钉群。
+#### &emsp;&emsp;&emsp;&emsp;使用此插件在运行打包命令时，自动上传到蒲公英或者FirIm发布平台，并通知到钉钉群。
 
 ## 引入依赖
 
@@ -33,14 +33,13 @@
 添加完成后重新rebuild，项目编译成功即可使用。</br>
 
 
-### 在配置完app签名和插件参数配置后，运行命令: assembleRelease 即可。
+### 在配置完app签名和插件参数文件后，运行命令: assembleRelease 即可。
 
 
-## 参数配置
+## 插件参数配置
 
 1、必填配置：ddConfig、ddContent中根据自定义的msgtype选择对应的配置模型</br>
 2、选填配置：pgyConfig、firImConfig</br>
-
 
 
 ```
@@ -307,9 +306,9 @@ public FeedCardBean feedCard;
 ```
 
 ### 参考资料：
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;钉钉API: <https://open.dingtalk.com/document/group/custom-robot-access></br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;蒲公英API：<https://www.pgyer.com/doc/view/api#fastUploadApp></br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Fir.im：<https://www.betaqr.com/apps></br>
+&emsp;&emsp;&emsp;&emsp;<https://open.dingtalk.com/document/group/custom-robot-access></br>
+&emsp;&emsp;&emsp;&emsp;<https://www.pgyer.com/doc/view/api#fastUploadApp></br>
+&emsp;&emsp;&emsp;&emsp;<https://www.betaqr.com/apps></br>
 
 
 #### <font color="#dddd00">注：发送到钉钉的消息内容，需要包含钉钉机器人配置的关键字</font>
