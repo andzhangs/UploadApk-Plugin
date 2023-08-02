@@ -16,9 +16,13 @@ public class Constant {
      */
 
     /**
-     * Api接口域名
+     * 蒲公英默认Api接口域名
      */
     public static final String DEFAULT_PGY_API_URL = "https://www.pgyer.com/apiv2/app/";
+
+    public static final String DEFAULT_PGY_HOST="https://www.pgyer.com/";
+
+
 
 
     /*
@@ -29,13 +33,13 @@ public class Constant {
      */
 
     /**
-     * Api接口域名
+     * FirIm默认Api接口域名
      */
     public static final String DEFAULT_FIR_IM_API_URL = "http://api.bq04.com/apps/";
 
     /**
-     * 绑定的自定义域名
+     * FirIm默认链接域名
      */
-    public static final String DEFAULT_FIR_IM_BINDING_HOST = "http://fir.andzhang.cn/";
+    public static final String DEFAULT_FIR_IM_HOST = "http://fir.andzhang.cn/";
 
 }

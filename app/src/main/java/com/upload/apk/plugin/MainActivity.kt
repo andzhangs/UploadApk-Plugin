@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.upload.apk.plugin.databinding.ActivityMainBinding
 
+/**
+ * <a href="https://www.pgyer.com/doc/view/api#commonParams">蒲公英官方文档</a>
+ *
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.andzhang.android.Constant;
 import cn.andzhang.android.api.PgyApiService;
+import cn.andzhang.android.model.config.DingDingContentType;
+import cn.andzhang.android.model.config.DingDingNewsBean;
 import cn.andzhang.android.model.config.PluginConfigBean;
 import cn.andzhang.android.model.response.BaseResponseBean;
-import cn.andzhang.android.model.response.pgy.PgyAppDetailInfoBean;
+import cn.andzhang.android.model.response.pgy.PgyCurrentAppDetailInfoBean;
 import cn.andzhang.android.model.response.pgy.PgyTokenBean;
 import cn.andzhang.android.util.Logger;
 import okhttp3.MediaType;
@@ -20,7 +23,7 @@ import retrofit2.Response;
 
 /**
  * 蒲公英操作类
- * 官方文档：https://www.pgyer.com/doc/view/api#commonParams
+ * <a href="https://www.pgyer.com/doc/view/api#commonParams">蒲公英官方文档</a>
  */
 public class PgyManager {
 
@@ -29,21 +32,9 @@ public class PgyManager {
     private final PluginConfigBean mConfigBean;
     private PgyTokenBean mUploadToken;
 
-    private PgyManager(PgyApiService pgyApiService, PluginConfigBean bean) {
+    public PgyManager(PgyApiService pgyApiService, PluginConfigBean bean) {
         this.mPgyApiService = pgyApiService;
         this.mConfigBean = bean;
-    }
-
-    public static void init(PgyApiService pgyApiService, PluginConfigBean bean) {
-        if (sInstance == null) {
-            synchronized (PgyManager.class) {
-                sInstance = new PgyManager(pgyApiService, bean);
-            }
-        }
-    }
-
-    public static PgyManager getInstance() {
-        return sInstance;
     }
 
     /**
@@ -68,7 +59,7 @@ public class PgyManager {
             };
             Call<BaseResponseBean<PgyTokenBean>> callBack = mPgyApiService.getPgyToken(map);
             Response<BaseResponseBean<PgyTokenBean>> result = callBack.execute();
-            Logger.print(">>>>>>>>>> HttpRequest.getUploadKey：" + result.body());
+//            Logger.print(">>>>>>>>>> HttpRequest.getUploadKey：");
             if (result.body() != null) {
                 mUploadToken = result.body().data;
             }
@@ -81,7 +72,7 @@ public class PgyManager {
      * 上传apk文件到蒲公英
      */
     public void uploadApkToPgy() {
-        Logger.print("运行了uploadApk：" + mUploadToken);
+//        Logger.print("运行了uploadApk：" + mUploadToken);
         if (mUploadToken != null && mConfigBean.apkOutputPath != null && mConfigBean.apkOutputPath.length() > 0) {
             try {
                 File file = new File(mConfigBean.apkOutputPath);
@@ -98,7 +89,7 @@ public class PgyManager {
 
                     Call<BaseResponseBean<Object>> callBack = mPgyApiService.uploadApkToPgy(mUploadToken.endpoint, parts);
                     Response<BaseResponseBean<Object>> result = callBack.execute();
-                    Logger.print(">>>>>>>>>> HttpRequest.uploadApk：http状态码：" + result.code() +"状态：" + result.isSuccessful() +"返回数据："+ result.body());
+//                    Logger.print(">>>>>>>>>> HttpRequest.uploadApk：http状态码：" + result.code() + ", 状态：" + result.isSuccessful());
                     if (204 == result.code()) {
                         getCurrentReleaseFinishedAppInfo();
                     }
@@ -115,32 +106,76 @@ public class PgyManager {
      * 错误码，1247 应用正在发布中
      * 返回 code = 1246 ，可间隔 3s ~ 5s 重新调用 URL 进行检测，直到返回成功或失败。
      */
-    public void getCurrentReleaseFinishedAppInfo(){
-
-    }
-
-
-    public void getAppDetailInfo() {
+    private void getCurrentReleaseFinishedAppInfo() {
         try {
-            Map<String, Object> map = new HashMap<>(3) {
+            Map<String, Object> map = new HashMap<>(2) {
                 {
                     put("_api_key", mConfigBean.pgyConfig.pgyApiKey);
-                    put("appKey", mConfigBean.pgyConfig.pgyAppKey);
                     put("buildKey", mUploadToken.key); //Build Key是唯一标识应用的索引ID，可以通过 获取App所有版本取得
-
                 }
             };
-            Call<BaseResponseBean<PgyAppDetailInfoBean>> callBack = mPgyApiService.getAppDetailInfo(map);
-            Response<BaseResponseBean<PgyAppDetailInfoBean>> result = callBack.execute();
-            if (result.body() != null && result.body().data != null) {
-                Logger.print(">>>>>>>>>> HttpRequest.getAppDetailInfo：" + result.body().data);
-                if (result.isSuccessful()) {
-                    DingDingManager.getInstance().sendApkToDingDing(mConfigBean.ddContent);
+            Call<BaseResponseBean<PgyCurrentAppDetailInfoBean>> call = mPgyApiService.getCurrentDetailInfo(map);
+            Response<BaseResponseBean<PgyCurrentAppDetailInfoBean>> response = call.execute();
+            BaseResponseBean<PgyCurrentAppDetailInfoBean> body = response.body();
+            if (body != null) {
+                int code = body.code;
+                if (code == 1246) {
+                    Logger.print("应用发布等待中。。。");
+                    Thread.sleep(3000L);
+                    getCurrentReleaseFinishedAppInfo();
+                } else if (code == 1216) {
+                    Logger.print("应用发布失败!!!");
+                } else if (code == 1247) {
+                    Logger.print("应用正在发布中...");
+                    Thread.sleep(3000L);
+                    getCurrentReleaseFinishedAppInfo();
+                } else if (code == 0) {
+                    sendToDDing(body.data);
+                } else {
+                    Logger.print("蒲公英发布...");
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            Logger.print("获取信息异常：" + e);
         }
     }
 
+    private void sendToDDing(PgyCurrentAppDetailInfoBean bean) {
+        DingDingNewsBean dingDingNewsBean = mConfigBean.ddContent;
+        String dingDingType = dingDingNewsBean.msgtype;
+        if (dingDingType.equals(DingDingContentType.LINK.getType())) {
+            if (dingDingNewsBean.link.messageUrl.isEmpty() || dingDingNewsBean.link.messageUrl == null) {
+                dingDingNewsBean.link.messageUrl = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
+            }
+            if (dingDingNewsBean.link.picUrl.isEmpty() || dingDingNewsBean.link.picUrl == null) {
+                dingDingNewsBean.link.picUrl = bean.buildQRCodeURL;
+            }
+        } else if (dingDingType.equals(DingDingContentType.PHOTO.getType())) {
+            if (dingDingNewsBean.photo == null) {
+                DingDingNewsBean.PhotoBean photoBean = new DingDingNewsBean.PhotoBean();
+                photoBean.photoURL = bean.buildQRCodeURL;
+                dingDingNewsBean.photo = photoBean;
+            } else if (dingDingNewsBean.photo.photoURL.isEmpty() || dingDingNewsBean.photo.photoURL == null) {
+                dingDingNewsBean.link.messageUrl = bean.buildQRCodeURL;
+            }
+        } else if (dingDingType.equals(DingDingContentType.ACTION_CARD.getType())) {
+            dingDingNewsBean.actionCard.text = "![screenshot](" + bean.buildQRCodeURL + ")" + dingDingNewsBean.actionCard.text;
+            if (dingDingNewsBean.actionCard.singleURL.isEmpty() || dingDingNewsBean.actionCard.singleURL == null) {
+                dingDingNewsBean.actionCard.singleURL = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
+            }
+        } else if (dingDingType.equals(DingDingContentType.FEED_CARD.getType())) {
+            for (DingDingNewsBean.FeedCardBean.FeedCardLinksBean link : dingDingNewsBean.feedCard.links) {
+                if (link.messageURL.isEmpty() || link.messageURL == null) {
+                    link.messageURL = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
+                }
+                if (link.picURL.isEmpty() || link.picURL == null) {
+                    link.picURL = bean.buildQRCodeURL;
+                }
+            }
+        }
+        DingDingManager.getInstance().sendApkToDingDing(dingDingNewsBean);
+//        Logger.print("发送消息到钉钉：" + mConfigBean.ddContent);
+        Logger.print("发布成功！");
+    }
 }

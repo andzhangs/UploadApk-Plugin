@@ -1,15 +1,55 @@
-## 插件配置
+## 前言：
+#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;使用此插件在运行打包命令时，自动上传到蒲公英或者FirIm发布平台，并通知到钉钉群。
+
+## 引入依赖
+
+### 第一步：配置项目级 "build.gradle" 文件:
+```
+    buildscript {
+         dependencies {
+            classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.0.0'
+         }
+    }
+```
+
+### 第二步：配置项目级 "setting.gradle" 文件:
+```
+    pluginManagement {
+        repositories {
+            maven { url "https://jitpack.io" }
+        }
+    }
+```
+
+### 第三步：配置模块级 "build.gradle" 文件:
+```
+    plugins {
+        id 'upload-apk-plugin'
+    }
+```
+
+### 第四步：项目最外层新建 "upload-apk.json" 文件，写入配置，实例见下文。
+
+添加完成后重新rebuild，项目编译成功即可使用。</br>
+
+
+### 在配置完app签名和插件参数配置后，运行命令: assembleRelease 即可。
+
+
+## 参数配置
 
 1、必填配置：ddConfig、ddContent中根据自定义的msgtype选择对应的配置模型</br>
 2、选填配置：pgyConfig、firImConfig</br>
 
+
+
 ```
 {
-  "apkOutputPath": "/Users/zhangshuai/Project____/Android/AvifAndroid/app/release/app-release.apk",
+  "apkOutputPath": "xxx/xxx/xxx/app-release.apk",
   "isPgy": false,
   "pgyConfig": {
-    "pgyAppKey": "b047ec0d32eebb0b3d3412f8eac0a82d",
-    "pgyApiKey": "de0f88af701cd8853bec33df259cc83e",
+    "pgyAppKey": "",
+    "pgyApiKey": "",
     "pgyBuildType": "android",
     "apkName": "app-release.apk",
     "pgyOversea": 2,
@@ -24,41 +64,41 @@
   },
   "firImConfig": {
     "type": "android",
-    "packageName": "zs.android.avif",
-    "bindingHost": "http://fir.andzhang.cn/",
-    "apiToken": "62fa6ffe5a53ec00a5e6265a0e00c372",
-    "icon": "/Users/zhangshuai/Project____/Android/AvifAndroid/app/release/icon_app.png",
-    "xName": "Avif",
-    "xVersion": "1.0.2",
-    "xBuild": "102",
+    "packageName": "xxx.xxx.xxx",
+    "bindingHost": "",
+    "apiToken": "",
+    "icon": "xxxx/xxx/xxx/icon.png",
+    "xName": "AppName",
+    "xVersion": "1.0.0",
+    "xBuild": "1",
     "xChangeLog": "Fir.im版本更新"
   },
   "ddConfig": {
-    "ddWebSecret": "SECa3a5ddaadf2b297d00b9684a8a6b64f88f52a8288e6fc0bdc0a6db49bccec2f5",
-    "ddWebHookUrl": "https://oapi.dingtalk.com/robot/send?access_token=d0847aaa3043c3d85e96a6784502c1304b6e3103f8b872d6b82e7b6c4f04a0a1"
+    "ddWebSecret": "",
+    "ddWebHookUrl": ""
   },
   "ddContent": {
     "at": {
       "atMobiles": [
-        "18874703156"
+        "188****1234"
       ],
       "atUserIds": [
-        "zs18874703156"
+        "id188****1234"
       ],
       "isAtAll": false
     },
     "msgtype": "link",
     "text": {
-      "content": "我是来自蒲公英Apk动态发布的消息测试用例 @zs18874703156 "
+      "content": "我是来自蒲公英Apk动态发布的消息测试用例 @id188****1234 "
     },
     "link": {
       "text": "我是来自蒲公英的Apk动态发布的消息测试用例",
       "title": "Release version",
-      "picUrl": "https://pro-icon-qn.bv40.com/19f628d4b5a4327808102bce9c778a0a5c782bdb?attname=icon_app.png&tmp=1670322537.9097416", 
-      "messageUrl": "https://www.pgyer.com/OXKA"  
+      "picUrl": "", 
+      "messageUrl": ""  
     },
     "photo": {
-      "photoURL": "https://www.pgyer.com/app/qrcodeHistory/2043a9d570d91ffb95da85e6ee745108ead34c27c7b7f7947bfb35ca44235055"
+      "photoURL": ""
     },
     "markdown": {
       "title": "上海天气",
@@ -69,23 +109,23 @@
       "text": "![screenshot](https://www.pgyer.com/app/qrcodeHistory/2043a9d570d91ffb95da85e6ee745108ead34c27c7b7f7947bfb35ca44235055) 我是Apk动态发布的消息测试用例",
       "btnOrientation": "0",
       "singleTitle": "阅读全文",
-      "singleURL": "https://www.pgyer.com/OXKA" 
+      "singleURL": "" 
     },
     "feedCard": {
       "links": [
         {
           "title": "我是Apk动态发布的消息测试用例-1",
-          "messageURL": "https://www.pgyer.com/OXKA", 
+          "messageURL": "", 
           "picURL": "https://www.pgyer.com/app/qrcodeHistory/2043a9d570d91ffb95da85e6ee745108ead34c27c7b7f7947bfb35ca44235055"
         },
         {
           "title": "我是Apk动态发布的消息测试用例-2",
-          "messageURL": "https://www.pgyer.com/OXKA", 
+          "messageURL": "", 
           "picURL": "https://www.pgyer.com/app/qrcodeHistory/2043a9d570d91ffb95da85e6ee745108ead34c27c7b7f7947bfb35ca44235055"
         },
         {
           "title": "我是Apk动态发布的消息测试用例-3",
-          "messageURL": "https://www.pgyer.com/OXKA",  
+          "messageURL": "",  
           "picURL": "https://www.pgyer.com/app/qrcodeHistory/2043a9d570d91ffb95da85e6ee745108ead34c27c7b7f7947bfb35ca44235055"
         }
       ]
@@ -98,7 +138,7 @@
 
 ### 1、基础字段：
 ```
-//(必填)本地Apk文件的本地路径
+//(必填)本地Apk文件的本地绝对路径
 public String apkOutputPath;
 //(必填)true：蒲公英，false：fir.im
 public boolean isPgy;
@@ -266,9 +306,10 @@ public FeedCardBean feedCard;
     public String picURL;
 ```
 
+### 参考资料：
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;钉钉API: <https://open.dingtalk.com/document/group/custom-robot-access></br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;蒲公英API：<https://www.pgyer.com/doc/view/api#fastUploadApp></br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Fir.im：<https://www.betaqr.com/apps></br>
 
-钉钉官网API: <https://open.dingtalk.com/document/group/custom-robot-access></br>
-蒲公英官网API：<https://www.pgyer.com/doc/view/api#fastUploadApp></br>
-Fir.im：<https://www.betaqr.com/apps></br>
 
-### 注：发送到钉钉的消息内容 需要包含钉钉机器人配置的关键字
+#### <font color="#dddd00">注：发送到钉钉的消息内容，需要包含钉钉机器人配置的关键字</font>

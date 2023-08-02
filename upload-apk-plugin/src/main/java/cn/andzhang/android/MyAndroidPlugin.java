@@ -18,14 +18,15 @@ import cn.andzhang.android.http.HttpRequest;
  */
 public class MyAndroidPlugin implements Plugin<Project> {
 
-    private final String GROUP_ID_ANDROID = "upload_plugin";
-    private final String TASK_NAME_TOKEN = "GetUploadToken";
-    private final String TASK_NAME_UPLOAD = "UploadApkFile";
+    private final String GROUP_ID_ANDROID = "plugin_upload_apk";
+    private final String TASK_NAME_UPLOAD = "uploadApkFile";
 
     @Override
     public void apply(Project project) {
 
-        createTasks(project);
+        HttpRequest httpRequest = new HttpRequest(project);
+
+        createTasks(project, httpRequest);
 
         project.afterEvaluate(new Action<Project>() {
             @Override
@@ -38,7 +39,6 @@ public class MyAndroidPlugin implements Plugin<Project> {
                 }).forEach(new Consumer<Task>() {
                     @Override
                     public void accept(Task task) {
-                        task.dependsOn(TASK_NAME_TOKEN);
                         task.finalizedBy(TASK_NAME_UPLOAD);
                     }
                 });
@@ -46,37 +46,20 @@ public class MyAndroidPlugin implements Plugin<Project> {
         });
     }
 
-    private void createTasks(Project project) {
-        Task taskGetToken = project.task(TASK_NAME_TOKEN);
+    private void createTasks(Project project, HttpRequest httpRequest) {
+        Task taskGetToken = project.task(TASK_NAME_UPLOAD);
         taskGetToken.setGroup(GROUP_ID_ANDROID);
         taskGetToken.doFirst(new Action<Task>() {
             @Override
             public void execute(Task task) {
-                HttpRequest.init(project);
+                httpRequest.getToken();
             }
         });
         taskGetToken.doLast(new Action<Task>() {
             @Override
             public void execute(Task task) {
-                HttpRequest.getInstance().getToken();
+                httpRequest.uploadApk();
             }
         });
-
-        Task taskUploadApk = project.task(TASK_NAME_UPLOAD);
-        taskUploadApk.setGroup(GROUP_ID_ANDROID);
-        taskUploadApk.doLast(new Action<Task>() {
-            @Override
-            public void execute(Task task) {
-                HttpRequest.getInstance().uploadApk();
-            }
-        });
-//        Task taskPostTextToDD = project.task("APostDD");
-//        taskPostTextToDD.setGroup(GROUP_ID_ANDROID);
-//        taskPostTextToDD.doLast(new Action<Task>() {
-//            @Override
-//            public void execute(Task task) {
-//                HttpRequest.getInstance().getAppDetailInfo();
-//            }
-//        });
     }
 }

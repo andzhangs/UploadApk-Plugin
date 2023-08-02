@@ -70,7 +70,7 @@ public class PluginConfigBean implements Serializable {
         //(必填)长度为 32, 用户在 fir 的 api_token
         public String apiToken = "";
         //(选填)fir仓库域名
-        public String bindingHost = "";
+        public String bindingHost = Constant.DEFAULT_FIR_IM_HOST;
         //(选填)appLogo 为空的话就不上传icon
         public String icon = "";
         //(选填)应用名称（上传 ICON 时不需要）

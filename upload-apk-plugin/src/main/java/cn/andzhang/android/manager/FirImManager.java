@@ -27,31 +27,17 @@ import retrofit2.Response;
  */
 public class FirImManager {
 
-    private final PluginConfigBean mData;
+    private final PluginConfigBean mConfigBean;
     private final FirApiService firApiService;
     private FirImTokenBean mFirImTokenBean;
 
     private static volatile FirImManager sInstance = null;
 
-    private FirImManager(PluginConfigBean data, FirApiService apiService) {
-        Logger.print("初始化Fir.Im");
-        this.mData = data;
+    public FirImManager(PluginConfigBean data, FirApiService apiService) {
+//        Logger.print("初始化Fir.Im");
+        this.mConfigBean = data;
         this.firApiService = apiService;
     }
-
-    public static void init(PluginConfigBean data, FirApiService apiService) {
-        if (sInstance == null) {
-            synchronized (FirImManager.class) {
-                sInstance = new FirImManager(data, apiService);
-            }
-        }
-    }
-
-    public static FirImManager getInstance() {
-        return sInstance;
-    }
-
-
     /**
      * 获取Fir.im的token
      */
@@ -59,9 +45,9 @@ public class FirImManager {
         try {
             Map<String, String> map = new HashMap<String, String>(3) {
                 {
-                    put("type", mData.firImConfig.type);
-                    put("bundle_id", mData.firImConfig.packageName);
-                    put("api_token", mData.firImConfig.apiToken);
+                    put("type", mConfigBean.firImConfig.type);
+                    put("bundle_id", mConfigBean.firImConfig.packageName);
+                    put("api_token", mConfigBean.firImConfig.apiToken);
                 }
             };
 
@@ -85,8 +71,8 @@ public class FirImManager {
             if (mFirImTokenBean == null) {
                 return;
             }
-            if (mData.apkOutputPath != null && mData.apkOutputPath.length() > 0) {
-                File apkFile = new File(mData.apkOutputPath);
+            if (mConfigBean.apkOutputPath != null && mConfigBean.apkOutputPath.length() > 0) {
+                File apkFile = new File(mConfigBean.apkOutputPath);
 
                 if (apkFile.exists()) {
                     RequestBody apkFileBody = RequestBody.create(apkFile, MediaType.parse("multipart/form-data"));
@@ -94,10 +80,10 @@ public class FirImManager {
                     builder.setType(MultipartBody.FORM);
                     builder.addFormDataPart("key", mFirImTokenBean.cert.binary.key);
                     builder.addFormDataPart("token", mFirImTokenBean.cert.binary.token);
-                    builder.addFormDataPart("x:name", mData.firImConfig.xName);
-                    builder.addFormDataPart("x:version", mData.firImConfig.xVersion);
-                    builder.addFormDataPart("x:build", mData.firImConfig.xBuild);
-                    builder.addFormDataPart("x:changelog", mData.firImConfig.xChangeLog);
+                    builder.addFormDataPart("x:name", mConfigBean.firImConfig.xName);
+                    builder.addFormDataPart("x:version", mConfigBean.firImConfig.xVersion);
+                    builder.addFormDataPart("x:build", mConfigBean.firImConfig.xBuild);
+                    builder.addFormDataPart("x:changelog", mConfigBean.firImConfig.xChangeLog);
                     builder.addFormDataPart("file", apkFile.getName(), apkFileBody);
                     List<MultipartBody.Part> parts = builder.build().parts();
                     Call<FirImUploadBean> call = firApiService.uploadToFirIm(mFirImTokenBean.cert.binary.upload_url, parts);
@@ -109,14 +95,14 @@ public class FirImManager {
                         return;
                     }
                     String apkStatue = result.is_completed ? "成功" : "失败！！！";
-                    Logger.print(">>>>>>>>>> apk上传：" + apkStatue);
+//                    Logger.print(">>>>>>>>>> apk上传：" + apkStatue);
 
                     if (result.is_completed) {
 
                         getApplicationList();
 
-                        if (mData.firImConfig.icon != null && mData.firImConfig.icon.length() > 0) {
-                            File iconFile = new File(mData.firImConfig.icon);
+                        if (mConfigBean.firImConfig.icon != null && mConfigBean.firImConfig.icon.length() > 0) {
+                            File iconFile = new File(mConfigBean.firImConfig.icon);
                             if (iconFile.exists()) {
                                 RequestBody iconFileBody = RequestBody.create(iconFile, MediaType.parse("image/*"));
 
@@ -141,7 +127,7 @@ public class FirImManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.print("icon图标上传：失败！！！");
+            Logger.print("icon图标上传：失败。"+e);
         }
     }
 
@@ -150,13 +136,13 @@ public class FirImManager {
      */
     private void getApplicationList() {
         try {
-            Call<FirApplicationBean> call = firApiService.getApplicationList(mData.firImConfig.apiToken);
+            Call<FirApplicationBean> call = firApiService.getApplicationList(mConfigBean.firImConfig.apiToken);
             Response<FirApplicationBean> response = call.execute();
             FirApplicationBean beans = response.body();
             for (int i = 0; i < Objects.requireNonNull(beans).getItems().size(); i++) {
                 FirApplicationBean.ItemsBean bean = beans.getItems().get(i);
-                Logger.print("应用：" + bean.getName() + "--->" + bean);
-                if (bean.getName().equals(mData.firImConfig.xName) && bean.getBundle_id().equals(mData.firImConfig.packageName)) {
+//                Logger.print("应用：" + bean.getName() + "--->" + bean);
+                if (bean.getName().equals(mConfigBean.firImConfig.xName) && bean.getBundle_id().equals(mConfigBean.firImConfig.packageName)) {
                     sendToDDing(bean);
                     break;
                 }
@@ -173,10 +159,10 @@ public class FirImManager {
      */
     private void getApkInfo(String appId) {
         try {
-            Call<FirApkDetailBean> result = firApiService.getApkDetailInfo(appId, mData.firImConfig.apiToken);
+            Call<FirApkDetailBean> result = firApiService.getApkDetailInfo(appId, mConfigBean.firImConfig.apiToken);
             Response<FirApkDetailBean> response = result.execute();
             FirApkDetailBean data = response.body();
-            Logger.print("应用详情：" + data);
+//            Logger.print("应用详情：" + data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,28 +170,28 @@ public class FirImManager {
 
     private void sendToDDing(FirApplicationBean.ItemsBean bean) {
         //通知类型
-        String dingDingType = mData.ddContent.msgtype;
+        String dingDingType = mConfigBean.ddContent.msgtype;
         if (!dingDingType.isEmpty() && dingDingType != null ) {
             if (dingDingType.equals(DingDingContentType.LINK.getType())) {
-                if (mData.ddContent.link.messageUrl.isEmpty() || mData.ddContent.link.messageUrl == null) {
-                    mData.ddContent.link.messageUrl = mData.firImConfig.bindingHost + bean.getShortX();
+                if (mConfigBean.ddContent.link.messageUrl.isEmpty() || mConfigBean.ddContent.link.messageUrl == null) {
+                    mConfigBean.ddContent.link.messageUrl = mConfigBean.firImConfig.bindingHost + bean.getShortX();
                 }
             } else if (dingDingType.equals(DingDingContentType.ACTION_CARD.getType())) {
-                if (mData.ddContent.actionCard.singleURL.isEmpty()) {
-                    mData.ddContent.actionCard.singleURL = mData.firImConfig.bindingHost + bean.getShortX();
+                if (mConfigBean.ddContent.actionCard.singleURL.isEmpty()) {
+                    mConfigBean.ddContent.actionCard.singleURL = mConfigBean.firImConfig.bindingHost + bean.getShortX();
                 }
             } else if (dingDingType.equals(DingDingContentType.FEED_CARD.getType())) {
-                for (DingDingNewsBean.FeedCardBean.FeedCardLinksBean link : mData.ddContent.feedCard.links) {
+                for (DingDingNewsBean.FeedCardBean.FeedCardLinksBean link : mConfigBean.ddContent.feedCard.links) {
                     if (link.messageURL.isEmpty()) {
-                        link.messageURL = mData.firImConfig.bindingHost + bean.getShortX();
+                        link.messageURL = mConfigBean.firImConfig.bindingHost + bean.getShortX();
                     }
                 }
             }
-            Logger.print("发送消息到钉钉："+mData.ddContent);
-            DingDingManager.getInstance().sendApkToDingDing(mData.ddContent);
-
+//            Logger.print("发送消息到钉钉："+mConfigBean.ddContent);
+            DingDingManager.getInstance().sendApkToDingDing(mConfigBean.ddContent);
+            Logger.print("发布成功！");
         }else{
-            Logger.print("为设置钉钉通知类型: msgtype 字段");
+            Logger.print("未设置钉钉通知类型: msgtype 字段");
         }
     }
 

@@ -36,11 +36,56 @@ import cn.andzhang.android.model.config.PluginConfigBean;
  */
 public class HttpRequest {
 
-    public static PluginConfigBean mConfigBean;
+    private static Project mProject;
+    public PluginConfigBean mConfigBean;
+    private PgyManager mPgyManager;
+    private FirImManager mFirImManager;
 
-    private HttpRequest() {
+    public HttpRequest(Project project) {
+        File file = new File(project.getRootDir().getAbsolutePath() + "/upload-apk.json");
+        if (!file.exists()) {
+            return;
+        }
+
+        mProject = project;
+        Gson mGson = new Gson();
+        try {
+            JsonReader jsonReader = new JsonReader(new FileReader(file));
+            createSign(mGson.fromJson(jsonReader, PluginConfigBean.class));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 安全配置
+     */
+    private void createSign(PluginConfigBean data) {
+        try {
+            Long mTimestamp = System.currentTimeMillis();
+            String stringToSign = mTimestamp + "\n" + data.ddConfig.ddWebSecret;
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(data.ddConfig.ddWebSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
+            String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), StandardCharsets.UTF_8);
+            data.ddConfig.ddWebHookUrl += "&timestamp=" + mTimestamp + "&sign=" + sign;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mConfigBean = data;
+
+        loadHttp();
+    }
+
+    private void loadHttp() {
+        File apkFile = new File(mConfigBean.apkOutputPath);
+        if (!apkFile.exists()) {
+            Logger.print("Apk安装包不存在");
+            return;
+        }
+
         HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor(s -> {
-            Logger.print("输出日志：" + s);
+//            Logger.print("输出日志：" + s);
             if (s.contains("<-- 201")) {
                 Logger.print("Fir.im请求成功！！");
             }
@@ -62,52 +107,12 @@ public class HttpRequest {
 
         if (mConfigBean.isPgy) {
             PgyApiService pgyApiService = mRetrofit.create(PgyApiService.class);
-            PgyManager.init(pgyApiService,mConfigBean);
+            mPgyManager = new PgyManager(pgyApiService, mConfigBean);
         } else {
             //初始化FirIm
             FirApiService firApiService = mRetrofit.create(FirApiService.class);
-            FirImManager.init(mConfigBean, firApiService);
+            mFirImManager = new FirImManager(mConfigBean, firApiService);
         }
-    }
-
-    public static HttpRequest getInstance() {
-        return HttpRequestHolder.INSTANCE;
-    }
-
-    private static class HttpRequestHolder {
-        private static final HttpRequest INSTANCE = new HttpRequest();
-    }
-
-    public static void init(Project project) {
-        Gson mGson = new Gson();
-        File file = new File(project.getRootDir().getAbsolutePath() + "/upload-apk.json");
-        try {
-            JsonReader jsonReader = new JsonReader(new FileReader(file));
-            //拼接webhook
-            createSign(mGson.fromJson(jsonReader, PluginConfigBean.class));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 安全配置
-     */
-    private static void createSign(PluginConfigBean data) {
-        try {
-            Long mTimestamp = System.currentTimeMillis();
-            String stringToSign = mTimestamp + "\n" + data.ddConfig.ddWebSecret;
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(data.ddConfig.ddWebSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-            byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
-            String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), StandardCharsets.UTF_8);
-            data.ddConfig.ddWebHookUrl += "&timestamp=" + mTimestamp + "&sign=" + sign;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mConfigBean = data;
-
-        Logger.print("输出配置参数：" + mConfigBean);
     }
 
 
@@ -115,18 +120,18 @@ public class HttpRequest {
      * 获取token
      */
     public void getToken() {
+//        Logger.print("获取平台Token...");
         if (mConfigBean.isPgy) {
             if (mConfigBean.pgyConfig != null) {
-                PgyManager.getInstance().getPgyToken();
-
+                mPgyManager.getPgyToken();
             } else {
-                System.out.println("请配置蒲公英相关数据");
+                Logger.print("请配置蒲公英相关数据！！！");
             }
         } else {
             if (mConfigBean.firImConfig != null) {
-                FirImManager.getInstance().getFirImToken();
+                mFirImManager.getFirImToken();
             } else {
-                System.out.println("请配置Fir.im相关数据");
+                Logger.print("请配置Fir.im相关数据！！！");
             }
         }
     }
@@ -135,17 +140,18 @@ public class HttpRequest {
      * 上传apk文件
      */
     public void uploadApk() {
+        Logger.print("开始上传Apk...");
         if (mConfigBean.isPgy) {
             if (mConfigBean.pgyConfig != null) {
-                PgyManager.getInstance().uploadApkToPgy();
+                mPgyManager.uploadApkToPgy();
             } else {
-                System.out.println("请配置蒲公英相关数据");
+                Logger.print("请配置蒲公英相关数据！！！");
             }
         } else {
             if (mConfigBean.firImConfig != null) {
-                FirImManager.getInstance().uploadApkToFirIm();
+                mFirImManager.uploadApkToFirIm();
             } else {
-                System.out.println("请配置Fir.im相关数据");
+                Logger.print("请配置Fir.im相关数据！！！");
             }
         }
     }

@@ -2,18 +2,9 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     //自定义三
-//    id 'upload-apk-plugin'
+    id 'upload-apk-plugin'
 //    id 'groovy-plugin'
 }
-
-//App配置文档
-apply from: "${rootProject.rootDir}/script/AppConfig.gradle"
-//打包apk上传到蒲公英，并发通知到钉钉
-//apply from: "${rootProject.rootDir}/script/UploadApk.gradle"
-//自定义一
-apply from: "${rootProject.rootDir}/script/Tasks.gradle"
-//自定义二
-apply from: "${rootProject.rootDir}/script/DemoPlugin.gradle"
 
 android {
     namespace 'com.upload.apk.plugin'

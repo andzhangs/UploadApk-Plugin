@@ -41,11 +41,12 @@
       ],
       "isAtAll": false
     },
-    "msgtype": "link",
-    "link": {
-      "text": "我是来自FirIm的Apk动态发布的消息测试用例",
-      "title": "发布新版App啦！v1.0.0",
-      "picUrl": "https://pro-icon-qn.bv40.com/19f628d4b5a4327808102bce9c778a0a5c782bdb?attname=icon_app.png&tmp=1670322537.9097416"
+    "msgtype": "actionCard",
+    "actionCard": {
+      "title": "通知：",
+      "text": "我是来自FirIm的Apk动态发布的消息测试用例。",
+      "btnOrientation": "0",
+      "singleTitle": "查看详情"
     }
   }
 }

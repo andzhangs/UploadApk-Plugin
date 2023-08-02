@@ -3,7 +3,6 @@ package cn.andzhang.android.manager;
 import java.io.IOException;
 import cn.andzhang.android.api.DingDingApiService;
 import cn.andzhang.android.model.config.DingDingNewsBean;
-import cn.andzhang.android.util.Logger;
 import retrofit2.Response;
 
 /**
@@ -35,14 +34,12 @@ public class DingDingManager {
 
     /**
      * 发送文本到钉钉
-     * {"errcode":0,"errmsg":"ok"}
      */
     public void sendApkToDingDing(DingDingNewsBean content) {
         try {
             Response<Object> response = dingDingApiService.sendApkToDingDing(mWebHookUrl, content).execute();
             Object result = response.body();
-            Logger.print(">>>>>>>>>> HttpRequest.SendApkToDingDing：" + result);
-
+//            Logger.print(">>>>>>>>>> HttpRequest.SendApkToDingDing：" + result);
         } catch (IOException e) {
             e.printStackTrace();
         }
