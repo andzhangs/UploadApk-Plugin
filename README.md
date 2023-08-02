@@ -5,6 +5,7 @@
 ## 引入依赖
 
 ### 第一步：配置项目级 "build.gradle" 文件:
+当前版本：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
 ```
     buildscript {
          dependencies {
