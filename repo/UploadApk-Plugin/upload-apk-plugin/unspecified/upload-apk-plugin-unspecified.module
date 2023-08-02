@@ -1,0 +1,104 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "UploadApk-Plugin",
+    "module": "upload-apk-plugin",
+    "version": "unspecified",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "upload-apk-plugin-unspecified.jar",
+          "url": "upload-apk-plugin-unspecified.jar",
+          "size": 94096,
+          "sha512": "7855600be8d6fabe8a624192a08502f4d19b5a113a44e8d4c3f3e98f26946ea14e969f3d8b78c66eaa83f001ef388c1dce74b894dba16394ea150970908ff7a6",
+          "sha256": "f4173dde1637fd6c2c6002a85acb2745cca428d62f35a909161ebf84ecb2a9ee",
+          "sha1": "16a80516ec7a87b31cb258a3c4976a7302c67fec",
+          "md5": "a04867a5c72b9a32eed41b71c058a610"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.6"
+          }
+        },
+        {
+          "group": "commons-codec",
+          "module": "commons-codec",
+          "version": {
+            "requires": "1.11"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.10.0"
+          }
+        },
+        {
+          "group": "com.squareup.retrofit2",
+          "module": "retrofit",
+          "version": {
+            "requires": "2.9.0"
+          }
+        },
+        {
+          "group": "com.squareup.retrofit2",
+          "module": "converter-gson",
+          "version": {
+            "requires": "2.9.0"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "logging-interceptor",
+          "version": {
+            "requires": "4.9.3"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "upload-apk-plugin-unspecified.jar",
+          "url": "upload-apk-plugin-unspecified.jar",
+          "size": 94096,
+          "sha512": "7855600be8d6fabe8a624192a08502f4d19b5a113a44e8d4c3f3e98f26946ea14e969f3d8b78c66eaa83f001ef388c1dce74b894dba16394ea150970908ff7a6",
+          "sha256": "f4173dde1637fd6c2c6002a85acb2745cca428d62f35a909161ebf84ecb2a9ee",
+          "sha1": "16a80516ec7a87b31cb258a3c4976a7302c67fec",
+          "md5": "a04867a5c72b9a32eed41b71c058a610"
+        }
+      ]
+    }
+  ]
+}
