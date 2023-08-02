@@ -5,11 +5,11 @@
 ## 引入依赖
 
 ### 第一步：配置项目级 "build.gradle" 文件:
-当前版本：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
+LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
 ```
     buildscript {
          dependencies {
-            classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.0.0'
+            classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:LastVersion'
          }
     }
 ```
@@ -40,9 +40,10 @@
 
 
 ## 插件参数配置
+1、选填配置：pgyConfig、firImConfig</br>
+2、必填配置：ddConfig、ddContent</br>
+3、ddContent的内容根据自定义的 msgtype 选择对应的json参数
 
-1、必填配置：ddConfig、ddContent中根据自定义的msgtype选择对应的配置模型</br>
-2、选填配置：pgyConfig、firImConfig</br>
 
 
 ```
