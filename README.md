@@ -38,14 +38,14 @@
 ### 在配置完app签名和插件参数文件后，进行如下方式构建发布：
 
     方式一：运行task: uploadApkFile
-    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】
+    【注：'apkOutputPath'字段必须配置正确全路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】
 ######
     方式二: 运行task: assembleRelease 
-    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】 
+    【注：'apkOutputPath'字段必须配置正确全路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】 
 
 ######
     方式三：Build -> Generate Signed Bundle/APK -> 进入面板[选择:APK] ->....
-    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/release/app-release.apk】 
+    【注：'apkOutputPath'字段必须配置正确全路径，例如：/xx/xx/xx/app/release/app-release.apk】 
 
 
 

@@ -2,13 +2,15 @@
 buildscript {
     repositories {
         mavenLocal()
+        //自定义仓库路径
+//        maven { url = 'CustomProjectPlugin/repo' }
     }
 
     dependencies {
 //        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.21'
 
         //jitpack.io仓库
-//        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.1.0'
+        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.1.0'
 
         //模拟远程仓库依赖
 //        classpath 'cn.andzhang.android:upload-apk-plugin:1.1.0'

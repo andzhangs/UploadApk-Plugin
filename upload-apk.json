@@ -1,6 +1,6 @@
 {
   "gradleTask": "assembleRelease",
-  "apkOutputPath": "/Users/zhangshuai/Project____/Android/UploadApk-Plugin/app/release/app-release.apk",
+  "apkOutputPath": "/Users/zhangshuai/Project____/Android/UploadApk-Plugin/app/build/outputs/apk/release/app-release.apk",
   "isPgy": true,
   "pgyConfig": {
     "pgyAppKey": "b047ec0d32eebb0b3d3412f8eac0a82d",
