@@ -4,6 +4,13 @@ pluginManagement {
         google()
         gradlePluginPortal()
         maven { url "https://jitpack.io" }
+
+        //maven本地仓库路径  运行命令：publishToMavenLocal 或者 publishReleasePublicationToMavenLocal
+        // /Users/zhangshuai/.m2/repository
+//        mavenLocal()
+
+        //自定义仓库路径
+//        maven { url = 'upload-apk-plugin/repo' }
     }
 }
 dependencyResolutionManagement {

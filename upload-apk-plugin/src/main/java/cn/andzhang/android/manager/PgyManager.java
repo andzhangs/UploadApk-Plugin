@@ -93,9 +93,12 @@ public class PgyManager {
                     if (204 == result.code()) {
                         getCurrentReleaseFinishedAppInfo();
                     }
+                } else {
+                    Logger.print("文件不存在："+mConfigBean.apkOutputPath);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
         }
     }
@@ -134,6 +137,8 @@ public class PgyManager {
                 } else {
                     Logger.print("蒲公英发布...");
                 }
+            }else{
+                Logger.print("上传失败，网络异常！！！");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

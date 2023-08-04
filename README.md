@@ -5,7 +5,7 @@
 ## 引入依赖
 
 ### 第一步：配置项目级 "build.gradle" 文件:
-LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
+最新版本：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
 ```
     buildscript {
          dependencies {
@@ -32,10 +32,20 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
 
 ### 第四步：项目最外层新建 "upload-apk.json" 文件，写入配置，实例见下文。
 
-添加完成后重新rebuild，项目编译成功即可使用。
+    添加完成后重新rebuild，项目编译成功即可使用。
 
 
-### 在配置完app签名和插件参数文件后，运行命令: assembleRelease 即可。
+### 在配置完app签名和插件参数文件后，进行如下方式构建发布：
+
+    方式一：运行task: uploadApkFile
+    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】
+######
+    方式二: 运行task: assembleRelease 
+    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】 
+
+######
+    方式三：Build -> Generate Signed Bundle/APK -> 进入面板[选择:APK] ->....
+    【注：'apkOutputPath'字段必须配置正确全路径路径，例如：/xx/xx/xx/app/release/app-release.apk】 
 
 
 
@@ -45,9 +55,9 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
 3、ddContent的内容根据自定义的 msgtype 选择对应的json参数
 
 
-
 ```
 {
+  "gradleTask": "assembleRelease",
   "apkOutputPath": "xxx/xxx/xxx/app-release.apk",
   "isPgy": false,
   "pgyConfig": {
@@ -141,7 +151,9 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
 
 ### 1、基础字段：
 ```
-//(必填)本地Apk文件的本地绝对路径
+//(必填)此插件运行在此命令之后
+public String gradleTask;
+//(必填)本地Apk文件的本地绝对路径，根据构建apk方式配置生成后的地址
 public String apkOutputPath;
 //(必填)true：蒲公英，false：fir.im
 public boolean isPgy;

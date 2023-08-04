@@ -1,10 +1,15 @@
 plugins {
+//    id 'AndResGuard'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
     //自定义三
-    id 'upload-apk-plugin'
+//    id 'upload-apk-plugin'
 //    id 'groovy-plugin'
 }
+
+//apply from: 'and_res_guard.gradle'
+
 
 android {
     namespace 'com.upload.apk.plugin'
@@ -16,7 +21,6 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -54,6 +58,18 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+//    applicationVariants.all { variant ->
+//        //判断是release还是debug版本
+//        def buildType = variant.buildType.name
+//        if (buildType == "release") {
+//            variant.outputs.all {
+////                variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/build/outputs/apk/release")
+//                variant.getPackageApplicationProvider().get().outputDirectory = new File(project.projectDir.absolutePath + "/release")
+//                outputFileName = "app-release.apk"
+//            }
+//        }
+//    }
 }
 
 dependencies {
@@ -65,4 +81,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation "androidx.metrics:metrics-performance:1.0.0-alpha03"
 }

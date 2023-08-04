@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.0'
+    }
+}
+
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
@@ -7,6 +16,8 @@ plugins {
 }
 
 dependencies {
+
+
     //gradle sdk
     implementation gradleApi()
     //groovy sdk
@@ -55,7 +66,7 @@ gradlePlugin {
         }
         androids {
             id = MAVEN_ANDROID_ARTIFACT_ID
-            implementationClass = 'cn.andzhang.android.MyAndroidPlugin'
+            implementationClass = 'cn.andzhang.android.UploadApkPlugin'
         }
     }
 }
@@ -131,6 +142,7 @@ publishing {
 //            }
             //自定义路径：CustomProjectPlugin/build/repo
             url = layout.projectDirectory.dir('repo')
+            //自定义路径： 项目级别 repo
 //            url = uri('../repo')
         }
     }

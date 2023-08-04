@@ -40,9 +40,10 @@ public class HttpRequest {
     public PluginConfigBean mConfigBean;
     private PgyManager mPgyManager;
     private FirImManager mFirImManager;
+    public static final String CONFIG_JSON = "upload-apk.json";
 
     public HttpRequest(Project project) {
-        File file = new File(project.getRootDir().getAbsolutePath() + "/upload-apk.json");
+        File file = new File(project.getRootDir().getAbsolutePath() + File.separator + CONFIG_JSON);
         if (!file.exists()) {
             return;
         }
@@ -72,26 +73,21 @@ public class HttpRequest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         mConfigBean = data;
 
         loadHttp();
     }
 
     private void loadHttp() {
-        File apkFile = new File(mConfigBean.apkOutputPath);
-        if (!apkFile.exists()) {
-            Logger.print("Apk安装包不存在");
-            return;
-        }
-
         HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor(s -> {
 //            Logger.print("输出日志：" + s);
             if (s.contains("<-- 201")) {
-                Logger.print("Fir.im请求成功！！");
+                Logger.print("Fir.im请求成功！");
             }
 
             if (s.contains("<-- 204")) {
-                Logger.print("蒲公英上传成功！！");
+                Logger.print("蒲公英上传成功！");
             }
         });
         mInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -120,19 +116,23 @@ public class HttpRequest {
      * 获取token
      */
     public void getToken() {
+        if (isExist()) {
 //        Logger.print("获取平台Token...");
-        if (mConfigBean.isPgy) {
-            if (mConfigBean.pgyConfig != null) {
-                mPgyManager.getPgyToken();
+            if (mConfigBean.isPgy) {
+                if (mConfigBean.pgyConfig != null) {
+                    mPgyManager.getPgyToken();
+                } else {
+                    Logger.print("请配置蒲公英相关数据！！！");
+                }
             } else {
-                Logger.print("请配置蒲公英相关数据！！！");
+                if (mConfigBean.firImConfig != null) {
+                    mFirImManager.getFirImToken();
+                } else {
+                    Logger.print("请配置Fir.im相关数据！！！");
+                }
             }
-        } else {
-            if (mConfigBean.firImConfig != null) {
-                mFirImManager.getFirImToken();
-            } else {
-                Logger.print("请配置Fir.im相关数据！！！");
-            }
+        }else{
+            Logger.print("配置的Apk路径中文件不存在！！！");
         }
     }
 
@@ -140,19 +140,51 @@ public class HttpRequest {
      * 上传apk文件
      */
     public void uploadApk() {
-        Logger.print("开始上传Apk...");
-        if (mConfigBean.isPgy) {
-            if (mConfigBean.pgyConfig != null) {
-                mPgyManager.uploadApkToPgy();
+        if (isExist()) {
+            Logger.print("开始上传Apk...");
+            if (mConfigBean.isPgy) {
+                if (mConfigBean.pgyConfig != null) {
+                    mPgyManager.uploadApkToPgy();
+                } else {
+                    Logger.print("请配置蒲公英相关数据！！！");
+                }
             } else {
-                Logger.print("请配置蒲公英相关数据！！！");
+                if (mConfigBean.firImConfig != null) {
+                    mFirImManager.uploadApkToFirIm();
+                } else {
+                    Logger.print("请配置Fir.im相关数据！！！");
+                }
             }
-        } else {
-            if (mConfigBean.firImConfig != null) {
-                mFirImManager.uploadApkToFirIm();
+        }
+    }
+
+    public boolean isExist() {
+        File apkFile = new File(mConfigBean.apkOutputPath);
+        if (!apkFile.exists()) {
+            return false;
+        }
+        return true;
+    }
+
+    public void checkAPkPath(){
+        //自定义配置的apk地址
+        File configApkFile = new File(mConfigBean.apkOutputPath);
+        if (!configApkFile.exists()) {
+            String buildApkPath = mProject.getProjectDir().getAbsolutePath() + "/release/app-release.apk";
+            File buildApkFile = new File(buildApkPath);
+            if (buildApkFile.exists()) {
+                mConfigBean.apkOutputPath = buildApkPath;
+                Logger.print("输出地址-1：" + mConfigBean.apkOutputPath);
             } else {
-                Logger.print("请配置Fir.im相关数据！！！");
+                String assembleApkPath = mProject.getProjectDir().getAbsolutePath() + "/build/outputs/apk/release/app-release.apk";
+                File assembleApkFile = new File(assembleApkPath);
+                if (assembleApkFile.exists()) {
+                    mConfigBean.apkOutputPath = assembleApkPath;
+                    Logger.print("输出地址-2：" +mConfigBean.apkOutputPath);
+                }
             }
+        }else{
+            Logger.print("输出地址-3：" + mConfigBean.apkOutputPath);
         }
     }
 }

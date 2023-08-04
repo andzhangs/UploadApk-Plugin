@@ -7,6 +7,7 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.specs.Spec;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 import cn.andzhang.android.http.HttpRequest;
@@ -14,11 +15,11 @@ import cn.andzhang.android.http.HttpRequest;
 /**
  * @author zhangshuai@attrsense.com
  * @date 2022/11/24 14:01
- * @description
+ * @description 检测(或生成)新安装包后，上传到蒲公英或Fir.im，并通知到钉钉群
  */
-public class MyAndroidPlugin implements Plugin<Project> {
+public class UploadApkPlugin implements Plugin<Project> {
 
-    private final String GROUP_ID_ANDROID = "plugin_upload_apk";
+    private final String GROUP_ID_ANDROID = "plugin upload apk";
     private final String TASK_NAME_UPLOAD = "uploadApkFile";
 
     @Override
@@ -28,13 +29,14 @@ public class MyAndroidPlugin implements Plugin<Project> {
 
         createTasks(project, httpRequest);
 
+        //运行build apk后，调起自定义task
         project.afterEvaluate(new Action<Project>() {
             @Override
             public void execute(Project pro) {
                 pro.getTasks().matching(new Spec<Task>() {
                     @Override
                     public boolean isSatisfiedBy(Task task) {
-                        return "assembleRelease".equals(task.getName());
+                        return httpRequest.mConfigBean.gradleTask.equals(task.getName());
                     }
                 }).forEach(new Consumer<Task>() {
                     @Override
@@ -61,5 +63,10 @@ public class MyAndroidPlugin implements Plugin<Project> {
                 httpRequest.uploadApk();
             }
         });
+        //运行自定义task时，apk不存在时限运行指定task
+        File apkFile = new File(httpRequest.mConfigBean.apkOutputPath);
+        if (!apkFile.exists()) {
+            taskGetToken.dependsOn(httpRequest.mConfigBean.gradleTask);
+        }
     }
 }

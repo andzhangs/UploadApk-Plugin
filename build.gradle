@@ -1,27 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        //maven本地仓库路径  运行命令：publishToMavenLocal 或者 publishReleasePublicationToMavenLocal
-        // /Users/zhangshuai/.m2/repository
-//        mavenLocal()
-
-        //自定义仓库路径
-//        maven { url = 'upload-apk-plugin/repo' }
-        //远程仓库
-//        maven { url "https://jitpack.io" }
+        mavenLocal()
     }
 
     dependencies {
-//        def kotlin_version = '1.6.21'
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-//        classpath 'com.squareup.retrofit2:retrofit:2.9.0'
-//        classpath 'com.squareup.retrofit2:converter-gson:2.9.0'
-//        classpath 'com.squareup.okhttp3:okhttp:4.10.0'
-//        classpath 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+//        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.21'
 
         //jitpack.io仓库
-        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.0.0'
+//        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.0.0'
 
         //模拟远程仓库依赖
 //        classpath 'cn.andzhang.android:upload-apk-plugin:1.0.0'
