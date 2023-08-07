@@ -1,16 +1,12 @@
 package cn.andzhang.android;
 
-
-import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
-import org.gradle.api.specs.Spec;
-
 import java.io.File;
-import java.util.function.Consumer;
-
+import cn.andzhang.android.exts.ConfigExtension;
 import cn.andzhang.android.http.HttpRequest;
+import cn.andzhang.android.util.Logger;
 
 /**
  * @author zhangshuai@attrsense.com
@@ -19,54 +15,46 @@ import cn.andzhang.android.http.HttpRequest;
  */
 public class UploadApkPlugin implements Plugin<Project> {
 
-    private final String GROUP_ID_ANDROID = "plugin upload apk";
-    private final String TASK_NAME_UPLOAD = "uploadApkFile";
+    /**
+     * 自定义GroupId
+     */
+    private static final String GROUP_ID_UPLOAD = "plugin upload apk";
+    /**
+     * 自定义TaskName
+     */
+    private static final String TASK_NAME_UPLOAD = "uploadApkFile";
+    /**
+     * 自定义ClosureName
+     */
+    private static final String CLOSURE_NAME = "uploadApk";
+    /**
+     * 配置扩展属性
+     */
+    private ConfigExtension mConfigExtension;
 
     @Override
     public void apply(Project project) {
 
-        HttpRequest httpRequest = new HttpRequest(project);
-
-        createTasks(project, httpRequest);
+        mConfigExtension = project.getExtensions().create(CLOSURE_NAME, ConfigExtension.class);
 
         //运行build apk后，调起自定义task
-        project.afterEvaluate(new Action<Project>() {
-            @Override
-            public void execute(Project pro) {
-                pro.getTasks().matching(new Spec<Task>() {
-                    @Override
-                    public boolean isSatisfiedBy(Task task) {
-                        return httpRequest.mConfigBean.gradleTask.equals(task.getName());
-                    }
-                }).forEach(new Consumer<Task>() {
-                    @Override
-                    public void accept(Task task) {
-                        task.finalizedBy(TASK_NAME_UPLOAD);
-                    }
-                });
+        project.afterEvaluate(pro -> pro.getTasks().matching(task -> mConfigExtension.taskName.equals(task.getName())).forEach(task -> {
+            File file = new File(mConfigExtension.jsonPath);
+            if (file.exists()) {
+                task.finalizedBy(TASK_NAME_UPLOAD);
+                HttpRequest httpRequest = new HttpRequest(file);
+                createUploadTask(project, httpRequest);
+            } else {
+                Logger.print("配置文件不存在");
             }
-        });
+        }));
     }
 
-    private void createTasks(Project project, HttpRequest httpRequest) {
+    private void createUploadTask(Project project, HttpRequest httpRequest) {
         Task taskGetToken = project.task(TASK_NAME_UPLOAD);
-        taskGetToken.setGroup(GROUP_ID_ANDROID);
-        taskGetToken.doFirst(new Action<Task>() {
-            @Override
-            public void execute(Task task) {
-                httpRequest.getToken();
-            }
-        });
-        taskGetToken.doLast(new Action<Task>() {
-            @Override
-            public void execute(Task task) {
-                httpRequest.uploadApk();
-            }
-        });
-        //运行自定义task时，apk不存在时限运行指定task
-        File apkFile = new File(httpRequest.mConfigBean.apkOutputPath);
-        if (!apkFile.exists()) {
-            taskGetToken.dependsOn(httpRequest.mConfigBean.gradleTask);
-        }
+        taskGetToken.setGroup(GROUP_ID_UPLOAD);
+        taskGetToken.dependsOn(mConfigExtension.taskName);
+        taskGetToken.doFirst(task -> httpRequest.getToken());
+        taskGetToken.doLast(task -> httpRequest.uploadApk());
     }
 }

@@ -8,7 +8,13 @@ plugins {
 //    id 'groovy-plugin'
 }
 
+uploadApk {
+    taskName = 'assembleRelease'
+    jsonPath = "${rootDir}/upload-apk.json"
+}
+
 //apply from: 'and_res_guard.gradle'
+
 
 
 android {

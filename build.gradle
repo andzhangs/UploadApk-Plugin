@@ -1,19 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        mavenLocal()
+//        mavenLocal()
         //自定义仓库路径
-//        maven { url = 'CustomProjectPlugin/repo' }
+        maven { url = 'upload-apk-plugin/repo' }
     }
 
     dependencies {
 //        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.21'
 
         //jitpack.io仓库
-        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.1.0'
+//        classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:1.1.0'
 
         //模拟远程仓库依赖
-//        classpath 'cn.andzhang.android:upload-apk-plugin:1.1.0'
+        classpath 'cn.andzhang.android:upload-apk-plugin:1.2.0'
 //        classpath 'cn.andzhang.groovy:groovy-plugin:1.0.0'
     }
 }

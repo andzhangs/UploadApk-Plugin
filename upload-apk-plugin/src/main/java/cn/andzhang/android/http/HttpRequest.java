@@ -1,21 +1,15 @@
 package cn.andzhang.android.http;
 
-
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-
 import org.apache.commons.codec.binary.Base64;
-import org.gradle.api.Project;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import cn.andzhang.android.api.FirApiService;
 import cn.andzhang.android.api.PgyApiService;
 import cn.andzhang.android.manager.DingDingManager;
@@ -36,22 +30,15 @@ import cn.andzhang.android.model.config.PluginConfigBean;
  */
 public class HttpRequest {
 
-    private static Project mProject;
     public PluginConfigBean mConfigBean;
     private PgyManager mPgyManager;
     private FirImManager mFirImManager;
-    public static final String CONFIG_JSON = "upload-apk.json";
+    private File mApkOutputPath;
 
-    public HttpRequest(Project project) {
-        File file = new File(project.getRootDir().getAbsolutePath() + File.separator + CONFIG_JSON);
-        if (!file.exists()) {
-            return;
-        }
-
-        mProject = project;
+    public HttpRequest(File configFile) {
         Gson mGson = new Gson();
         try {
-            JsonReader jsonReader = new JsonReader(new FileReader(file));
+            JsonReader jsonReader = new JsonReader(new FileReader(configFile));
             createSign(mGson.fromJson(jsonReader, PluginConfigBean.class));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -81,7 +68,6 @@ public class HttpRequest {
 
     private void loadHttp() {
         HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor(s -> {
-//            Logger.print("输出日志：" + s);
             if (s.contains("<-- 201")) {
                 Logger.print("Fir.im请求成功！");
             }
@@ -117,7 +103,6 @@ public class HttpRequest {
      */
     public void getToken() {
         if (isExist()) {
-//        Logger.print("获取平台Token...");
             if (mConfigBean.isPgy) {
                 if (mConfigBean.pgyConfig != null) {
                     mPgyManager.getPgyToken();
@@ -131,8 +116,8 @@ public class HttpRequest {
                     Logger.print("请配置Fir.im相关数据！！！");
                 }
             }
-        }else{
-            Logger.print("配置的Apk路径中文件不存在！！！");
+        } else {
+            Logger.print("配置文件中的 'apkOutputPath' 字段输出路径的文件不存在！！！");
         }
     }
 
@@ -144,13 +129,13 @@ public class HttpRequest {
             Logger.print("开始上传Apk...");
             if (mConfigBean.isPgy) {
                 if (mConfigBean.pgyConfig != null) {
-                    mPgyManager.uploadApkToPgy();
+                    mPgyManager.uploadApkToPgy(mApkOutputPath);
                 } else {
                     Logger.print("请配置蒲公英相关数据！！！");
                 }
             } else {
                 if (mConfigBean.firImConfig != null) {
-                    mFirImManager.uploadApkToFirIm();
+                    mFirImManager.uploadApkToFirIm(mApkOutputPath);
                 } else {
                     Logger.print("请配置Fir.im相关数据！！！");
                 }
@@ -163,28 +148,29 @@ public class HttpRequest {
         if (!apkFile.exists()) {
             return false;
         }
+        mApkOutputPath = apkFile;
         return true;
     }
 
-    public void checkAPkPath(){
-        //自定义配置的apk地址
-        File configApkFile = new File(mConfigBean.apkOutputPath);
-        if (!configApkFile.exists()) {
-            String buildApkPath = mProject.getProjectDir().getAbsolutePath() + "/release/app-release.apk";
-            File buildApkFile = new File(buildApkPath);
-            if (buildApkFile.exists()) {
-                mConfigBean.apkOutputPath = buildApkPath;
-                Logger.print("输出地址-1：" + mConfigBean.apkOutputPath);
-            } else {
-                String assembleApkPath = mProject.getProjectDir().getAbsolutePath() + "/build/outputs/apk/release/app-release.apk";
-                File assembleApkFile = new File(assembleApkPath);
-                if (assembleApkFile.exists()) {
-                    mConfigBean.apkOutputPath = assembleApkPath;
-                    Logger.print("输出地址-2：" +mConfigBean.apkOutputPath);
-                }
-            }
-        }else{
-            Logger.print("输出地址-3：" + mConfigBean.apkOutputPath);
-        }
-    }
+//    public void checkApkPath(){
+//        //自定义配置的apk地址
+//        File configApkFile = new File(mConfigBean.apkOutputPath);
+//        if (!configApkFile.exists()) {
+//            String buildApkPath = mProject.getProjectDir().getAbsolutePath() + "/release/app-release.apk";
+//            File buildApkFile = new File(buildApkPath);
+//            if (buildApkFile.exists()) {
+//                mConfigBean.apkOutputPath = buildApkPath;
+//                Logger.print("输出地址-1：" + mConfigBean.apkOutputPath);
+//            } else {
+//                String assembleApkPath = mProject.getProjectDir().getAbsolutePath() + "/build/outputs/apk/release/app-release.apk";
+//                File assembleApkFile = new File(assembleApkPath);
+//                if (assembleApkFile.exists()) {
+//                    mConfigBean.apkOutputPath = assembleApkPath;
+//                    Logger.print("输出地址-2：" +mConfigBean.apkOutputPath);
+//                }
+//            }
+//        }else{
+//            Logger.print("输出地址-3：" + mConfigBean.apkOutputPath);
+//        }
+//    }
 }

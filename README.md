@@ -5,7 +5,7 @@
 ## 引入依赖
 
 ### 第一步：配置项目级 "build.gradle" 文件:
-最新版本：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
+LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
 ```
     buildscript {
          dependencies {
@@ -28,11 +28,16 @@
     plugins {
         id 'upload-apk-plugin'
     }
+    
+    uploadApk {
+        taskName = 'assembleRelease'
+        jsonPath = "/xxx/xxx/xxx/upload-apk.json"
+    }
+    
 ```
 
-### 第四步：项目最外层新建 "upload-apk.json" 文件，写入配置，实例见下文。
 
-    添加完成后重新rebuild，项目编译成功即可使用。
+    配置完成后重新同步项目，项目编译成功即可使用。
 
 
 ### 在配置完app签名和插件参数文件后，进行如下方式构建发布：
@@ -50,15 +55,14 @@
 
 
 ## 插件参数配置
-1、选填配置：pgyConfig、firImConfig</br>
-2、必填配置：ddConfig、ddContent</br>
-3、ddContent的内容根据自定义的 msgtype 选择对应的json参数
+1、【选填】配置：pgyConfig、firImConfig</br>
+2、【必填】配置：ddConfig、ddContent</br>
+3、"ddContent" 的内容根据自定义的 "msgtype" 选择对应的json参数模块
 
 
 ```
 {
-  "gradleTask": "assembleRelease",
-  "apkOutputPath": "xxx/xxx/xxx/app-release.apk",
+  "apkOutputPath": "xxx/xxx/xxx/xxx.apk",
   "isPgy": false,
   "pgyConfig": {
     "pgyAppKey": "",
@@ -151,8 +155,6 @@
 
 ### 1、基础字段：
 ```
-//(必填)此插件运行在此命令之后
-public String gradleTask;
 //(必填)本地Apk文件的本地绝对路径，根据构建apk方式配置生成后的地址
 public String apkOutputPath;
 //(必填)true：蒲公英，false：fir.im

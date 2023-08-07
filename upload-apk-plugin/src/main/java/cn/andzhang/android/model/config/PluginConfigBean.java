@@ -11,8 +11,6 @@ import cn.andzhang.android.Constant;
  * @date 2022/12/5 10:58
  */
 public class PluginConfigBean implements Serializable {
-    //(必填)此插件运行在此命令之后
-    public String gradleTask;
     //(必填)本地Apk文件的本地路径
     public String apkOutputPath;
     //true：蒲公英，false：fir.im

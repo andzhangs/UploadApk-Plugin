@@ -15,10 +15,6 @@ public interface DingDingApiService {
 
     /**
      * 发送自定义消息形式到钉钉
-     *
-     * @param url
-     * @param body
-     * @return
      */
     @POST
     Call<Object> sendApkToDingDing(@Url String url, @Body DingDingNewsBean body);

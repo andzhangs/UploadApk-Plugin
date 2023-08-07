@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import cn.andzhang.android.Constant;
 import cn.andzhang.android.api.PgyApiService;
 import cn.andzhang.android.model.config.DingDingContentType;
@@ -24,10 +23,10 @@ import retrofit2.Response;
 /**
  * 蒲公英操作类
  * <a href="https://www.pgyer.com/doc/view/api#commonParams">蒲公英官方文档</a>
+ * @author zhangshuai
  */
 public class PgyManager {
 
-    private static volatile PgyManager sInstance = null;
     private final PgyApiService mPgyApiService;
     private final PluginConfigBean mConfigBean;
     private PgyTokenBean mUploadToken;
@@ -59,7 +58,6 @@ public class PgyManager {
             };
             Call<BaseResponseBean<PgyTokenBean>> callBack = mPgyApiService.getPgyToken(map);
             Response<BaseResponseBean<PgyTokenBean>> result = callBack.execute();
-//            Logger.print(">>>>>>>>>> HttpRequest.getUploadKey：");
             if (result.body() != null) {
                 mUploadToken = result.body().data;
             }
@@ -71,30 +69,23 @@ public class PgyManager {
     /**
      * 上传apk文件到蒲公英
      */
-    public void uploadApkToPgy() {
-//        Logger.print("运行了uploadApk：" + mUploadToken);
-        if (mUploadToken != null && mConfigBean.apkOutputPath != null && mConfigBean.apkOutputPath.length() > 0) {
+    public void uploadApkToPgy(File apkOutputPath) {
+        if (mUploadToken != null) {
             try {
-                File file = new File(mConfigBean.apkOutputPath);
-                if (file.exists()) {
-                    RequestBody fileBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
-                    MultipartBody.Builder builder = new MultipartBody.Builder();
-                    builder.setType(MultipartBody.FORM);
-                    builder.addFormDataPart("key", mUploadToken.key);
-                    builder.addFormDataPart("signature", mUploadToken.params.signature);
-                    builder.addFormDataPart("x-cos-security-token", mUploadToken.params.xToken);
-                    builder.addFormDataPart("x-cos-meta-file-name", mConfigBean.pgyConfig.apkName);
-                    builder.addFormDataPart("file", file.getName(), fileBody);
-                    List<MultipartBody.Part> parts = builder.build().parts();
+                RequestBody fileBody = RequestBody.create(apkOutputPath, MediaType.parse("multipart/form-data"));
+                MultipartBody.Builder builder = new MultipartBody.Builder();
+                builder.setType(MultipartBody.FORM);
+                builder.addFormDataPart("key", mUploadToken.key);
+                builder.addFormDataPart("signature", mUploadToken.params.signature);
+                builder.addFormDataPart("x-cos-security-token", mUploadToken.params.xToken);
+                builder.addFormDataPart("x-cos-meta-file-name", mConfigBean.pgyConfig.apkName);
+                builder.addFormDataPart("file", apkOutputPath.getName(), fileBody);
+                List<MultipartBody.Part> parts = builder.build().parts();
 
-                    Call<BaseResponseBean<Object>> callBack = mPgyApiService.uploadApkToPgy(mUploadToken.endpoint, parts);
-                    Response<BaseResponseBean<Object>> result = callBack.execute();
-//                    Logger.print(">>>>>>>>>> HttpRequest.uploadApk：http状态码：" + result.code() + ", 状态：" + result.isSuccessful());
-                    if (204 == result.code()) {
-                        getCurrentReleaseFinishedAppInfo();
-                    }
-                } else {
-                    Logger.print("文件不存在："+mConfigBean.apkOutputPath);
+                Call<BaseResponseBean<Object>> callBack = mPgyApiService.uploadApkToPgy(mUploadToken.endpoint, parts);
+                Response<BaseResponseBean<Object>> result = callBack.execute();
+                if (result.code() == 204) {
+                    getCurrentReleaseFinishedAppInfo();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -137,7 +128,7 @@ public class PgyManager {
                 } else {
                     Logger.print("蒲公英发布...");
                 }
-            }else{
+            } else {
                 Logger.print("上传失败，网络异常！！！");
             }
         } catch (IOException | InterruptedException e) {
@@ -150,10 +141,10 @@ public class PgyManager {
         DingDingNewsBean dingDingNewsBean = mConfigBean.ddContent;
         String dingDingType = dingDingNewsBean.msgtype;
         if (dingDingType.equals(DingDingContentType.LINK.getType())) {
-            if (dingDingNewsBean.link.messageUrl.isEmpty() || dingDingNewsBean.link.messageUrl == null) {
+            if (dingDingNewsBean.link.messageUrl == null || dingDingNewsBean.link.messageUrl.isEmpty()) {
                 dingDingNewsBean.link.messageUrl = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
             }
-            if (dingDingNewsBean.link.picUrl.isEmpty() || dingDingNewsBean.link.picUrl == null) {
+            if (dingDingNewsBean.link.picUrl == null || dingDingNewsBean.link.picUrl.isEmpty()) {
                 dingDingNewsBean.link.picUrl = bean.buildQRCodeURL;
             }
         } else if (dingDingType.equals(DingDingContentType.PHOTO.getType())) {
@@ -161,26 +152,24 @@ public class PgyManager {
                 DingDingNewsBean.PhotoBean photoBean = new DingDingNewsBean.PhotoBean();
                 photoBean.photoURL = bean.buildQRCodeURL;
                 dingDingNewsBean.photo = photoBean;
-            } else if (dingDingNewsBean.photo.photoURL.isEmpty() || dingDingNewsBean.photo.photoURL == null) {
+            } else if (dingDingNewsBean.photo.photoURL == null || dingDingNewsBean.photo.photoURL.isEmpty()) {
                 dingDingNewsBean.link.messageUrl = bean.buildQRCodeURL;
             }
         } else if (dingDingType.equals(DingDingContentType.ACTION_CARD.getType())) {
             dingDingNewsBean.actionCard.text = "![screenshot](" + bean.buildQRCodeURL + ")" + dingDingNewsBean.actionCard.text;
-            if (dingDingNewsBean.actionCard.singleURL.isEmpty() || dingDingNewsBean.actionCard.singleURL == null) {
+            if (dingDingNewsBean.actionCard.singleURL == null || dingDingNewsBean.actionCard.singleURL.isEmpty()) {
                 dingDingNewsBean.actionCard.singleURL = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
             }
         } else if (dingDingType.equals(DingDingContentType.FEED_CARD.getType())) {
             for (DingDingNewsBean.FeedCardBean.FeedCardLinksBean link : dingDingNewsBean.feedCard.links) {
-                if (link.messageURL.isEmpty() || link.messageURL == null) {
+                if (link.messageURL == null || link.messageURL.isEmpty()) {
                     link.messageURL = Constant.DEFAULT_PGY_HOST + bean.buildShortcutUrl;
                 }
-                if (link.picURL.isEmpty() || link.picURL == null) {
+                if (link.picURL == null || link.picURL.isEmpty()) {
                     link.picURL = bean.buildQRCodeURL;
                 }
             }
         }
-        DingDingManager.getInstance().sendApkToDingDing(dingDingNewsBean);
-//        Logger.print("发送消息到钉钉：" + mConfigBean.ddContent);
-        Logger.print("发布成功！");
+        DingDingManager.getInstance().sendApkToDingDing("蒲公英",dingDingNewsBean);
     }
 }
