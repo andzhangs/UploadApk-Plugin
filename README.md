@@ -9,7 +9,7 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
 ```
     buildscript {
          dependencies {
-            classpath 'com.github.TooCareAboutYOU:UploadApk-Plugin:LastVersion'
+            classpath 'com.github.andzhangs:UploadApk-Plugin:LastVersion'
          }
     }
 ```
