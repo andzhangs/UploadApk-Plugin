@@ -35,9 +35,7 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
     }
     
 ```
-
-
-    配置完成后重新同步项目，项目编译成功即可使用。
+    'upload-apk.json' 文件名可自定义。配置完成后重新同步项目，项目编译成功即可使用。
 
 
 ### 在配置完app签名和插件参数文件后，进行如下方式构建发布：
