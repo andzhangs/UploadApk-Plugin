@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 rootProject.name = "UploadApk-Plugin"
 include ':app'
 include ':upload-apk-plugin'
+//调试模式
 //includeBuild('upload-apk-plugin')

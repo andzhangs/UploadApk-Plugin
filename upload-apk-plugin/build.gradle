@@ -142,7 +142,7 @@ publishing {
 //            }
             //自定义路径：CustomProjectPlugin/build/repo
             url = layout.projectDirectory.dir('repo')
-            //自定义路径： 项目级别 repo
+            //自定义路径： 项目级别 repo 【发包的时候使用】
 //            url = uri('../repo')
         }
     }

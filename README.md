@@ -4,22 +4,22 @@
 
 ## 引入依赖
 
-### 第一步：配置项目级 "build.gradle" 文件:
+### 第一步：配置项目级 "setting.gradle" 文件:
+```
+    pluginManagement {
+        repositories {
+            maven { url "https://jitpack.io" }
+        }
+    }
+```
+
+### 第二步：配置项目级 "build.gradle" 文件:
 LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](https://jitpack.io/#TooCareAboutYOU/UploadApk-Plugin)
 ```
     buildscript {
          dependencies {
             classpath 'com.github.andzhangs:UploadApk-Plugin:LastVersion'
          }
-    }
-```
-
-### 第二步：配置项目级 "setting.gradle" 文件:
-```
-    pluginManagement {
-        repositories {
-            maven { url "https://jitpack.io" }
-        }
     }
 ```
 
