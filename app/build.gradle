@@ -1,5 +1,4 @@
 plugins {
-//    id 'AndResGuard'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 
@@ -12,10 +11,6 @@ uploadApk {
     taskName = 'assembleRelease'
     jsonPath = "${rootDir}/upload-apk.json"
 }
-
-//apply from: 'and_res_guard.gradle'
-
-
 
 android {
     namespace 'com.upload.apk.plugin'

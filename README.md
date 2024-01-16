@@ -38,7 +38,7 @@ LastVersion：[![](https://jitpack.io/v/TooCareAboutYOU/UploadApk-Plugin.svg)](h
     'upload-apk.json' 文件名可自定义。配置完成后重新同步项目，项目编译成功即可使用。
 
 
-### 在配置完app签名和插件参数文件后，进行如下方式构建发布：
+### 在配置完app签名和插件参数文件后，进行如下方式构建发布(任选一种方式即可)：
 
     方式一：运行task: uploadApkFile
     【注：'apkOutputPath'字段必须配置正确全路径，例如：/xx/xx/xx/app/build/outputs/apk/release/app-release.apk】

@@ -7,8 +7,6 @@ buildscript {
     }
 
     dependencies {
-//        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.21'
-
         //jitpack.io仓库
         classpath 'com.github.andzhangs:UploadApk-Plugin:1.2.0'
 
