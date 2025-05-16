@@ -110,7 +110,7 @@ publishing {
             pom {
                 name = "ZsPlugin"
                 description = "AndroidStudio打包APK后自动化上传到FirIm或蒲公英发布平台，并发送消息到钉钉群或飞书群"
-                url = "https://github.com/TooCareAboutYOU/UplaodApk-Plugin"
+                url = "https://github.com/andzhangs/UploadApk-Plugin"
                 inceptionYear = '2022/11/25'
                 licenses {
                     license {
